@@ -1,282 +1,123 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>给宝宝的专属提示 💕</title>
+    <title>花生米专属提示</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-        }
-        
-        h1 {
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-            font-size: 2.2em;
-        }
-        
-        .single-tip {
-            background: skyblue;
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
-            font-size: 1.4em;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        
-        .single-tip:hover {
-            transform: scale(1.05);
-        }
-        
-        .batch-tips-btn {
-            background: linear-gradient(45deg, #ff6b6b, #ffa8a8);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-        
-        .batch-tips-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        
-        .close-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        
+        body { margin: 0; overflow: hidden; }
         .tip-window {
             position: fixed;
             width: 280px;
             height: 100px;
-            background: lightpink;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            padding: 15px;
-            font-size: 1.1em;
-            color: #333;
+            font-family: '微软雅黑', sans-serif;
+            font-size: 14px;
             z-index: 1000;
-            cursor: move;
-            user-select: none;
-            border: 2px solid white;
-        }
-        
-        .instructions {
-            background: rgba(255,255,255,0.9);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #666;
-        }
-        
-        .heart {
-            color: #ff6b6b;
-            font-size: 1.5em;
-            margin: 0 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>💖 给宝宝的专属提示 💖</h1>
-        
-        <div class="single-tip" onclick="showSingleTip()">
-            宝宝我想你啦 💕
-        </div>
-        
-        <button class="batch-tips-btn" onclick="startBatchTips()">
-            点击收获更多关心 🌸
-        </button>
-        
-        <div class="instructions">
-            <p>💝 提示：点击上方按钮查看关心提示</p>
-            <p>💝 按空格键可以关闭所有弹窗</p>
-            <p>💝 也可以拖动弹窗到任意位置</p>
-        </div>
-    </div>
-
     <script>
-        let batchWindows = [];
-        let isBatchActive = false;
-
-        // 提示语库
-        const tips = [
-            '宝宝多喝水哦~💧', '宝宝要保持微笑呀😊', '每天都要元气满满🌞',
-            '记得吃水果🍎', '保持好心情💖', '好好爱自己✨', '宝宝我想你了💕',
-            '梦想成真⭐', '期待下一次见面👫', '金榜题名🏆',
-            '顺顺利利🌈', '早点休息🌙', '愿所有烦恼都消失🎈',
-            '别熬夜了哦宝宝⏰', '今天过得开心嘛😄', '宝宝天冷了，多穿衣服🧥', '晚安🌛'
-        ];
-
-        // 背景颜色库
-        const bgColors = [
-            'lightpink', 'skyblue', 'lightgreen', 'lavender',
-            'lightyellow', 'plum', 'coral', 'bisque', 'aquamarine',
-            'lightcoral', 'lightcyan', 'lightgoldenrodyellow'
-        ];
-
-        function showSingleTip() {
-            // 移除现有弹窗
-            removeAllTips();
-            
-            const singleTip = document.querySelector('.single-tip');
-            singleTip.textContent = "宝宝我想你啦 💕";
-            singleTip.style.background = 'skyblue';
-            
-            // 添加点击效果
-            singleTip.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                singleTip.style.transform = 'scale(1)';
-            }, 200);
-        }
-
-        function startBatchTips() {
-            if (isBatchActive) return;
-            
-            isBatchActive = true;
-            removeAllTips();
-            
-            // 创建100个弹窗
-            for (let i = 0; i < 100; i++) {
-                setTimeout(() => {
-                    createTipWindow();
-                }, i * 50);
+        class TipApp {
+            constructor() {
+                this.batchWindows = [];
+                this.singleWindow = null;
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        this.onSpaceGlobal();
+                    }
+                });
+                this.showSingleTip();
             }
-        }
 
-        function createTipWindow() {
-            const tip = tips[Math.floor(Math.random() * tips.length)];
-            const bgColor = bgColors[Math.floor(Math.random() * bgColors.length)];
-            
-            const window = document.createElement('div');
-            window.className = 'tip-window';
-            window.textContent = tip;
-            window.style.background = bgColor;
-            
-            // 随机位置
-            const maxX = window.innerWidth - 300;
-            const maxY = window.innerHeight - 120;
-            const x = Math.random() * maxX;
-            const y = Math.random() * maxY;
-            
-            window.style.left = x + 'px';
-            window.style.top = y + 'px';
-            
-            // 添加拖动功能
-            makeDraggable(window);
-            
-            document.body.appendChild(window);
-            batchWindows.push(window);
-        }
+            showSingleTip() {
+                this.singleWindow = document.createElement('div');
+                this.singleWindow.className = 'tip-window';
+                this.singleWindow.style.backgroundColor = 'skyblue';
+                this.singleWindow.textContent = '宝宝我想你啦';
+                
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const windowWidth = 280;
+                const windowHeight = 100;
+                const x = (screenWidth - windowWidth) / 2;
+                const y = (screenHeight - windowHeight) / 2;
+                
+                this.singleWindow.style.left = `${x}px`;
+                this.singleWindow.style.top = `${y}px`;
+                this.singleWindow.addEventListener('click', (e) => {
+                    if (e.target === this.singleWindow) {
+                        this.startBatchTips();
+                    }
+                });
+                
+                document.body.appendChild(this.singleWindow);
+            }
 
-        function makeDraggable(element) {
-            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-            
-            element.onmousedown = dragMouseDown;
-            
-            function dragMouseDown(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // 获取鼠标初始位置
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-            }
-            
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // 计算新位置
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                // 设置新位置
-                element.style.top = (element.offsetTop - pos2) + "px";
-                element.style.left = (element.offsetLeft - pos1) + "px";
-            }
-            
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-        }
+            createBatchWindow(count) {
+                if (count <= 0) return;
 
-        function removeAllTips() {
-            batchWindows.forEach(window => {
-                if (window.parentNode) {
-                    window.parentNode.removeChild(window);
+                const window = document.createElement('div');
+                window.className = 'tip-window';
+                this.batchWindows.push(window);
+
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const windowWidth = 280;
+                const windowHeight = 100;
+                const x = Math.random() * (screenWidth - windowWidth);
+                const y = Math.random() * (screenHeight - windowHeight);
+
+                window.style.left = `${x}px`;
+                window.style.top = `${y}px`;
+
+                const tips = [
+                    '宝宝多喝水哦~', '宝宝要保持微笑呀', '每天都要元气满满',
+                    '记得吃水果', '保持好心情', '好好爱自己', '宝宝我想你了',
+                    '梦想成真', '期待下一次见面', '金榜题名',
+                    '顺顺利利', '早点休息', '愿所有烦恼都消失',
+                    '别熬夜了哦宝宝', '今天过得开心嘛', '宝宝天冷了，多穿衣服', '晚安'
+                ];
+                window.textContent = tips[Math.floor(Math.random() * tips.length)];
+
+                const bgColors = [
+                    'lightpink', 'skyblue', 'lightgreen', 'lavender',
+                    'lightyellow', 'plum', 'coral', 'bisque', 'aquamarine'
+                ];
+                window.style.backgroundColor = bgColors[Math.floor(Math.random() * bgColors.length)];
+
+                document.body.appendChild(window);
+
+                if (count > 1) {
+                    setTimeout(() => this.createBatchWindow(count - 1), 50);
                 }
-            });
-            batchWindows = [];
-            isBatchActive = false;
+            }
+
+            startBatchTips() {
+                if (this.singleWindow) {
+                    document.body.removeChild(this.singleWindow);
+                    this.singleWindow = null;
+                }
+                setTimeout(() => this.createBatchWindow(100), 100);
+            }
+
+            onSpaceGlobal() {
+                if (this.singleWindow) {
+                    document.body.removeChild(this.singleWindow);
+                    this.singleWindow = null;
+                }
+                this.batchWindows.forEach(window => {
+                    document.body.removeChild(window);
+                });
+                this.batchWindows = [];
+            }
         }
 
-        // 空格键关闭所有弹窗
-        document.addEventListener('keydown', function(e) {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                removeAllTips();
-            }
-        });
-
-        // 触摸设备支持
-        document.addEventListener('touchstart', function(e) {
-            if (e.touches.length > 1) {
-                // 多点触摸时关闭所有弹窗
-                removeAllTips();
-            }
-        });
-
-        // 防止滚动
-        document.addEventListener('wheel', function(e) {
-            if (isBatchActive) {
-                e.preventDefault();
-            }
-        }, { passive: false });
+        new TipApp();
     </script>
 </body>
-
 </html>
