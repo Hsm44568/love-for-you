@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>花生米专属提示</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        .tip-window {
+            position: fixed;
+            width: 280px;
+            height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: '微软雅黑', sans-serif;
+            font-size: 14px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        class TipApp {
+            constructor() {
+                this.batchWindows = [];
+                this.singleWindow = null;
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        this.onSpaceGlobal();
+                    }
+                });
+                this.showSingleTip();
+            }
+
+            showSingleTip() {
+                this.singleWindow = document.createElement('div');
+                this.singleWindow.className = 'tip-window';
+                this.singleWindow.style.backgroundColor = 'skyblue';
+                this.singleWindow.textContent = '宝宝我想你啦';
+                
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const windowWidth = 280;
+                const windowHeight = 100;
+                const x = (screenWidth - windowWidth) / 2;
+                const y = (screenHeight - windowHeight) / 2;
+                
+                this.singleWindow.style.left = `${x}px`;
+                this.singleWindow.style.top = `${y}px`;
+                this.singleWindow.addEventListener('click', (e) => {
+                    if (e.target === this.singleWindow) {
+                        this.startBatchTips();
+                    }
+                });
+                
+                document.body.appendChild(this.singleWindow);
+            }
+
+            createBatchWindow(count) {
+                if (count <= 0) return;
+
+                const window = document.createElement('div');
+                window.className = 'tip-window';
+                this.batchWindows.push(window);
+
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const windowWidth = 280;
+                const windowHeight = 100;
+                const x = Math.random() * (screenWidth - windowWidth);
+                const y = Math.random() * (screenHeight - windowHeight);
+
+                window.style.left = `${x}px`;
+                window.style.top = `${y}px`;
+
+                const tips = [
+                    '宝宝多喝水哦~', '宝宝要保持微笑呀', '每天都要元气满满',
+                    '记得吃水果', '保持好心情', '好好爱自己', '宝宝我想你了',
+                    '梦想成真', '期待下一次见面', '金榜题名',
+                    '顺顺利利', '早点休息', '愿所有烦恼都消失',
+                    '别熬夜了哦宝宝', '今天过得开心嘛', '宝宝天冷了，多穿衣服', '晚安'
+                ];
+                window.textContent = tips[Math.floor(Math.random() * tips.length)];
+
+                const bgColors = [
+                    'lightpink', 'skyblue', 'lightgreen', 'lavender',
+                    'lightyellow', 'plum', 'coral', 'bisque', 'aquamarine'
+                ];
+                window.style.backgroundColor = bgColors[Math.floor(Math.random() * bgColors.length)];
+
+                document.body.appendChild(window);
+
+                if (count > 1) {
+                    setTimeout(() => this.createBatchWindow(count - 1), 50);
+                }
+            }
+
+            startBatchTips() {
+                if (this.singleWindow) {
+                    document.body.removeChild(this.singleWindow);
+                    this.singleWindow = null;
+                }
+                setTimeout(() => this.createBatchWindow(100), 100);
+            }
+
+            onSpaceGlobal() {
+                if (this.singleWindow) {
+                    document.body.removeChild(this.singleWindow);
+                    this.singleWindow = null;
+                }
+                this.batchWindows.forEach(window => {
+                    document.body.removeChild(window);
+                });
+                this.batchWindows = [];
+            }
+        }
+
+        new TipApp();
+    </script>
+</body>
+</html>
